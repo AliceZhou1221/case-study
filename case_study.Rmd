@@ -1,0 +1,53 @@
+---
+title: "case_study"
+output: github_document
+date: "2024-10-08"
+---
+
+```{r setup}
+library(tidyverse)
+library(p8105.datasets)
+
+data(nyc_airbnb)
+```
+## brainstorming questions
+
+* where are max and min air bnb prices
+  * what are average prices
+  * what factors affect prices
+* where are prices going up and down over time?
+* what's the relationship between number of reviews and average review?
+* does room type affect availability?
+* what's the location of the unit?
+  * what areas are popular?
+  * popularity = number of units? average price?
+* are there repeated hosts?
+  * if so, what does that mean?
+```{r}
+str(nyc_airbnb)
+```
+```{r}
+max(pull(nyc_airbnb, price))
+min(pull(nyc_airbnb, price))
+```
+```{r}
+summary(nyc_airbnb)
+```
+```{r}
+# what's the relationship between number of reviews and average review?
+nyc_airbnb %>% 
+  group_by(review_scores_location) %>% 
+  summarize(avg_review_number = mean(number_of_reviews)) %>% 
+  ggplot(aes(x = review_scores_location, y = avg_review_number, fill = review_scores_location))+
+  geom_bar(stat = "identity")
+  
+```
+```{r}
+#Average price by roomtype (visualised)
+nyc_airbnb %>%
+  group_by(room_type) %>%
+  summarise(mean_price = mean(price, na.rm = TRUE)) %>% 
+  ggplot(aes(x = room_type, y = mean_price))+
+  geom_bar(stat = "identity")
+```
+
